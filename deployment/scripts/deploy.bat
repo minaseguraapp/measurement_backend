@@ -15,7 +15,7 @@ echo Creating JAR file to upload...
 call mvnw package
 
 IF %ERRORLEVEL% NEQ 0 (
-    echo Fallo en la construcción del proyecto Maven. Abortando despliegue.
+    echo The artifact creation has failed.
     exit /b %ERRORLEVEL%
 )
 echo JAR File Created...
@@ -26,3 +26,10 @@ SET FINAL_PARAMS=--template-file %TEMPLATE_PATH% --stack-name %STACK_NAME% %PARA
 
 echo The creation/update of the Stack %STACK_NAME% will start with the next params [%FINAL_PARAMS%]
 sam deploy %FINAL_PARAMS%
+
+IF %ERRORLEVEL% NEQ 0 (
+    echo The stack deployment has failed.
+    exit /b %ERRORLEVEL%
+)
+
+echo The creation/update of the Stack %STACK_NAME% has finished successfully
