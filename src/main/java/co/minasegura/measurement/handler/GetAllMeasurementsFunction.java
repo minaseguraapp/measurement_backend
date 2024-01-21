@@ -3,7 +3,8 @@ package co.minasegura.measurement.handler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import java.util.function.Function;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.http.HttpStatusCode;
 
@@ -12,15 +13,15 @@ import software.amazon.awssdk.http.HttpStatusCode;
 public class GetAllMeasurementsFunction implements
     Function<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
-    Logger logger = Logger.getLogger(GetAllMeasurementsFunction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Logger.class);
 
     @Override
     public APIGatewayProxyResponseEvent apply(
         APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent) {
 
-        logger.info("New Request Started");
+        LOGGER.info("New Request Started");
         System.out.println("New Request Started V2");
         return new APIGatewayProxyResponseEvent()
-            .withStatusCode(HttpStatusCode.OK).withBody("Hola Mundo");
+            .withStatusCode(HttpStatusCode.OK).withBody("Hello world");
     }
 }
