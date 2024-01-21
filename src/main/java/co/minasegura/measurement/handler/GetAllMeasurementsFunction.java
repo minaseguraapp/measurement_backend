@@ -20,7 +20,6 @@ public class GetAllMeasurementsFunction implements
         APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent) {
 
         LOGGER.info("New Request Started");
-        System.out.println("New Request Started V2");
         return new APIGatewayProxyResponseEvent()
             .withStatusCode(HttpStatusCode.OK).withBody("Hello world");
     }
