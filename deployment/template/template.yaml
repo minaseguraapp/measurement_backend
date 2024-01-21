@@ -7,7 +7,7 @@ Description: >
 Globals:
   Function:
     Tracing: Active
-    CodeUri: target/measurement-backend-lambdas-1.0.0-SNAPSHOT-aws.jar
+    CodeUri: ../../target/measurement-backend-lambdas-1.0.0-SNAPSHOT-aws.jar
     Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
     Runtime: java17
     Timeout: 30
