@@ -1,5 +1,0 @@
-#!/bin/sh
-
-cd ${LAMBDA_TASK_ROOT:-.}
-
-./springboot-lambda-function -Dlogging.level.org.springframework=DEBUG

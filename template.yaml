@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  measurement-backend
+  Cloud template for measurement domain
+
+Globals:
+  Function:
+    Tracing: Active
+    CodeUri: target/measurement-backend-lambdas-1.0.0-SNAPSHOT-aws.jar
+    Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
+    Runtime: java17
+    Timeout: 30
+    MemorySize: 1024
+
+Resources:
+  MeasurementApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: development
+      Name: Measurement API
+      Description: API to expose measurement services
+
+  GetMeasurementFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Environment:
+        Variables:
+          SPRING_CLOUD_FUNCTION_DEFINITION: GetAllMeasurementsFunction
+      Events:
+        GetRequest:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MeasurementApi
+            Path: /measurements
+            Method: get
+
+Outputs:
+  ApiEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage for Springboot sample function"
+    Value: !Sub "https://${MeasurementApi}.execute-api.${AWS::Region}.amazonaws.com/development/measurements"

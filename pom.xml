@@ -9,7 +9,7 @@
     <relativePath/>
   </parent>
   <groupId>co.minasegura</groupId>
-  <artifactId>co.minasegura.measurement</artifactId>
+  <artifactId>measurement-backend-lambdas</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>measurement_backend</name>
   <description>Measurement domain backend</description>
@@ -17,7 +17,6 @@
   <properties>
     <java.version>17</java.version>
     <spring-cloud.version>2022.0.2</spring-cloud.version>
-    <spring-native.version>0.12.1</spring-native.version>
   </properties>
   <dependencies>
     <!-- The Following dependency is for SnapStart. This can be removed if not using SnapStart -->
@@ -37,11 +36,6 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-function-adapter-aws</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.experimental</groupId>
-      <artifactId>spring-native</artifactId>
-      <version>${spring-native.version}</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
@@ -97,6 +91,13 @@
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>url-connection-client</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+    </dependency>
+
   </dependencies>
   <dependencyManagement>
     <dependencies>
@@ -169,95 +170,12 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>native</id>
-      <activation>
-        <property>
-          <name>native</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.springframework.experimental</groupId>
-            <artifactId>spring-aot-maven-plugin</artifactId>
-            <version>${spring-native.version}</version>
-            <executions>
-              <execution>
-                <id>test-generate</id>
-                <goals>
-                  <goal>test-generate</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>generate</id>
-                <goals>
-                  <goal>generate</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.graalvm.buildtools</groupId>
-            <artifactId>native-maven-plugin</artifactId>
-            <version>0.9.19</version>
-            <extensions>true</extensions>
-            <executions>
-              <execution>
-                <id>build-native</id>
-                <goals>
-                  <goal>build</goal>
-                </goals>
-                <phase>package</phase>
-              </execution>
-              <execution>
-                <id>test-native</id>
-                <goals>
-                  <goal>test</goal>
-                </goals>
-                <phase>test</phase>
-              </execution>
-            </executions>
-            <configuration>
-              <buildArgs>
-                --enable-url-protocols=http
-                -H:+AddAllCharsets
-              </buildArgs>
-            </configuration>
-          </plugin>
-          <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>native-zip</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>single</goal>
-                </goals>
-                <inherited>false</inherited>
-              </execution>
-            </executions>
-            <configuration>
-              <finalName>function</finalName>
-              <descriptors>
-                <descriptor>src/assembly/native.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
   </profiles>
   <repositories>
     <repository>
       <id>spring-release</id>
       <name>Spring release</name>
       <url>https://repo.spring.io/release</url>
-    </repository>
-    <repository>
-      <id>spring-milestone</id>
-      <name>Spring Milestone Repository</name>
-      <url>https://repo.spring.io/milestone</url>
     </repository>
   </repositories>
   <pluginRepositories>
