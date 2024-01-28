@@ -1,5 +1,5 @@
 package co.minasegura.measurement.model;
 
-public class Measurement {
+import java.util.Map;
 
-}
+public record Measurement(Long timestamp, MeasurementType measurementType, Zone zone, Map<String, Object> measurementInfo) {}

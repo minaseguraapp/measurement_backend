@@ -1,16 +1,39 @@
 package co.minasegura.measurement.entity;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import java.util.Map;
 
 @DynamoDBTable(tableName = "MeasurementTable")
 public class MeasurementEntity {
+
     private String mineZoneID;
     private String measurementDateTimeType;
     private MineEntity mine;
     private ZoneEntity zone;
     private Map<String, Object> measurementInfo;
     private String measurementType;
+    private long timestamp;
+
+    public MeasurementEntity(
+        String mineZoneID,
+        String measurementDateTimeType,
+        MineEntity mine,
+        ZoneEntity zone,
+        Map<String, Object> measurementInfo,
+        String measurementType,
+        long timestamp
+    ) {
+        this.mineZoneID = mineZoneID;
+        this.measurementDateTimeType = measurementDateTimeType;
+        this.mine = mine;
+        this.zone = zone;
+        this.measurementInfo = measurementInfo;
+        this.measurementType = measurementType;
+        this.timestamp = timestamp;
+    }
 
     @DynamoDBHashKey(attributeName = "MineZoneID")
     public String getMineZoneID() {
@@ -64,5 +87,14 @@ public class MeasurementEntity {
 
     public void setMeasurementType(String measurementType) {
         this.measurementType = measurementType;
+    }
+
+    @DynamoDBAttribute(attributeName = "timestamp")
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

@@ -3,10 +3,16 @@ package co.minasegura.measurement.entity;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 
 public class ZoneEntity {
+
     private String zoneID;
     private String zoneType;
 
+    public ZoneEntity(String zoneID, String zoneType){
+        this.zoneID=zoneID;
+        this.zoneType=zoneType;
+    }
     @DynamoDBAttribute(attributeName = "zoneID")
+
     public String getZoneID() {
         return zoneID;
     }

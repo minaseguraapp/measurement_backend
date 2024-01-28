@@ -1,0 +1,109 @@
+openapi: 3.0.0
+info:
+  title: Measurement API
+  version: "1.0"
+servers:
+  - url: 'https://your-api-domain.com/'
+paths:
+  /measurement:
+    get:
+      summary: Obtener mediciones
+      description: Retorna una lista de mediciones basadas en los parámetros de consulta.
+      parameters:
+        - in: query
+          name: mine
+          required: true
+          schema:
+            type: string
+          description: El ID de la mina para filtrar las mediciones.
+        - in: query
+          name: zoneId
+          required: true
+          schema:
+            type: string
+          description: El ID de la zona para filtrar las mediciones.
+        - in: query
+          name: zoneType
+          required: false
+          schema:
+            type: string
+          description: El tipo de zona para filtrar las mediciones.
+        - in: query
+          name: measurementType
+          required: false
+          schema:
+            type: string
+            enum: [METHANE, COAL_DUST]
+          description: El tipo de medición para filtrar las mediciones.
+      responses:
+        '200':
+          description: Una lista de mediciones
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMeasurementResponse'
+        '400':
+          description: Petición incorrecta
+        '500':
+          description: Error interno del servidor
+    post:
+      summary: Crear una nueva medición
+      description: Acepta y almacena una nueva medición.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementInfoDTO'
+      responses:
+        '201':
+          description: Medición creada con éxito
+        '400':
+          description: Petición incorrecta
+        '500':
+          description: Error interno del servidor
+
+components:
+  schemas:
+    GetMeasurementResponse:
+      type: object
+      properties:
+        measurements:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeasurementInfoDTO'
+    MeasurementInfoDTO:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Momento de la medición en milisegundos desde la época UNIX.
+        measurementType:
+          type: string
+          enum: [METHANE, COAL_DUST]
+          description: Tipo de medición.
+        zone:
+          $ref: '#/components/schemas/Zone'
+        measurementInfo:
+          type: object
+          additionalProperties:
+            type: object
+          description: Información variable de la medición.
+    Zone:
+      type: object
+      properties:
+        id:
+          type: string
+          description: El ID de la zona.
+        type:
+          type: string
+          description: El tipo de zona.
+        mine:
+          $ref: '#/components/schemas/Mine'
+    Mine:
+      type: object
+      properties:
+        id:
+          type: string
+          description: El ID de la mina.
