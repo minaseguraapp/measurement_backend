@@ -21,9 +21,35 @@ Resources:
       Name: Measurement API
       Description: API to expose measurement services
 
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                Resource: !GetAtt MeasurementTable.Arn
+
   GetMeasurementFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Role: !GetAtt LambdaExecutionRole.Arn
       Environment:
         Variables:
           SPRING_CLOUD_FUNCTION_DEFINITION: GetAllMeasurementsFunction
