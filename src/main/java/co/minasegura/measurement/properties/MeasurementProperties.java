@@ -24,4 +24,17 @@ public class MeasurementProperties{
     public String getSortKeyFormat() {
         return sortKeyFormat;
     }
+
+    public void setRequiredFilters(
+        Set<MeasurementFilter> requiredFilters) {
+        this.requiredFilters = requiredFilters;
+    }
+
+    public void setPartitionKeyFormat(String partitionKeyFormat) {
+        this.partitionKeyFormat = partitionKeyFormat;
+    }
+
+    public void setSortKeyFormat(String sortKeyFormat) {
+        this.sortKeyFormat = sortKeyFormat;
+    }
 }
