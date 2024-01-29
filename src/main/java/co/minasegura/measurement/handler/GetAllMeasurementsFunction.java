@@ -33,6 +33,11 @@ public class GetAllMeasurementsFunction implements
 
         LOGGER.info("GET Measurement API started");
 
+        if (apiGatewayProxyRequestEvent.getQueryStringParameters() == null) {
+            return new APIGatewayProxyResponseEvent()
+                .withStatusCode(HttpStatusCode.BAD_REQUEST);
+        }
+
         EnumMap<MeasurementFilter, String> searchCriteria = util.getMeasurementFilter(
             apiGatewayProxyRequestEvent.getQueryStringParameters());
 

@@ -45,6 +45,16 @@ Resources:
                   - dynamodb:UpdateItem
                   - dynamodb:DeleteItem
                 Resource: !GetAtt MeasurementTable.Arn
+        - PolicyName: CloudWatchLogsAccess # Añade esta nueva política
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: arn:aws:logs:*:*:*
 
   GetMeasurementFunction:
     Type: AWS::Serverless::Function
