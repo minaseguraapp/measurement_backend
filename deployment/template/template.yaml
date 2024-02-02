@@ -62,14 +62,29 @@ Resources:
       Role: !GetAtt LambdaExecutionRole.Arn
       Environment:
         Variables:
-          SPRING_CLOUD_FUNCTION_DEFINITION: GetAllMeasurementsFunction
+          SPRING_CLOUD_FUNCTION_DEFINITION: MeasurementLambdaFunction
       Events:
         GetRequest:
           Type: Api
           Properties:
             RestApiId: !Ref MeasurementApi
-            Path: /measurements
+            Path: /measurement
             Method: get
+
+  PostMeasurementFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          SPRING_CLOUD_FUNCTION_DEFINITION: MeasurementLambdaFunction
+      Events:
+        GetRequest:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MeasurementApi
+            Path: /measurement
+            Method: post
 
   MeasurementTable:
     Type: AWS::DynamoDB::Table
@@ -90,4 +105,4 @@ Resources:
 Outputs:
   ApiEndpoint:
     Description: "API Gateway endpoint URL for Prod stage for Springboot sample function"
-    Value: !Sub "https://${MeasurementApi}.execute-api.${AWS::Region}.amazonaws.com/development/measurements"
+    Value: !Sub "https://${MeasurementApi}.execute-api.${AWS::Region}.amazonaws.com/development/measurement"

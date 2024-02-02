@@ -1,9 +1,9 @@
-package co.minasegura.measurement.service.impl.filtering;
+package co.minasegura.measurement.service.impl;
 
 import co.minasegura.measurement.dto.MeasurementFilter;
 import co.minasegura.measurement.model.Measurement;
-import co.minasegura.measurement.service.filtering.FilterOperator;
-import co.minasegura.measurement.service.filtering.IFilterCriteriaService;
+import co.minasegura.measurement.service.FilterOperator;
+import co.minasegura.measurement.service.IFilterCriteriaService;
 import java.util.EnumMap;
 import java.util.List;
 import org.springframework.stereotype.Service;

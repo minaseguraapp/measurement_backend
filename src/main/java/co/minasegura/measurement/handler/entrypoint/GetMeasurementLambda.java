@@ -1,36 +1,38 @@
-package co.minasegura.measurement.handler;
+package co.minasegura.measurement.handler.entrypoint;
 
 import co.minasegura.measurement.dto.GetMeasurementResponse;
 import co.minasegura.measurement.dto.MeasurementFilter;
+import co.minasegura.measurement.handler.route.LambdaFunction;
 import co.minasegura.measurement.service.IMeasurementService;
+import co.minasegura.measurement.util.CommonsUtil;
 import co.minasegura.measurement.util.EntrypointUtil;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import java.util.EnumMap;
 import java.util.Optional;
-import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.http.HttpStatusCode;
 
 @Component
-public class GetAllMeasurementsFunction implements
-    Function<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class GetMeasurementLambda implements LambdaFunction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Logger.class);
     private final IMeasurementService measurementService;
     private final EntrypointUtil util;
+    private final CommonsUtil commonsUtil;
 
-    public GetAllMeasurementsFunction(IMeasurementService measurementService, EntrypointUtil util) {
+    public GetMeasurementLambda(IMeasurementService measurementService, EntrypointUtil util,
+        CommonsUtil commonsUtil) {
         this.measurementService = measurementService;
         this.util = util;
+        this.commonsUtil = commonsUtil;
     }
 
     @Override
-    public APIGatewayProxyResponseEvent apply(
+    public APIGatewayProxyResponseEvent handle(
         APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent) {
-
         LOGGER.info("GET Measurement API started");
 
         if (apiGatewayProxyRequestEvent.getQueryStringParameters() == null) {
@@ -45,9 +47,10 @@ public class GetAllMeasurementsFunction implements
             new APIGatewayProxyResponseEvent()
                 .withStatusCode(HttpStatusCode.BAD_REQUEST);
         }
+
         GetMeasurementResponse response = measurementService.getMeasurements(searchCriteria);
 
-        Optional<String> jsonResponse = Optional.ofNullable(util.toJson(response));
+        Optional<String> jsonResponse = Optional.ofNullable(commonsUtil.toJson(response));
         LOGGER.info("GET Measurement API Finished");
 
         return jsonResponse

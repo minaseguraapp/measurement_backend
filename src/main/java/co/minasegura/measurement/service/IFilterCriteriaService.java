@@ -1,4 +1,4 @@
-package co.minasegura.measurement.service.filtering;
+package co.minasegura.measurement.service;
 
 import co.minasegura.measurement.dto.MeasurementFilter;
 import co.minasegura.measurement.model.Measurement;

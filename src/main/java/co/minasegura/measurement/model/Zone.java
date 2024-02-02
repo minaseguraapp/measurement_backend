@@ -1,3 +1,6 @@
 package co.minasegura.measurement.model;
 
-public record Zone(String id, String type, Mine mine){}
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+public record Zone(@NotNull String id, @NotNull String type, @NotNull @Valid Mine mine){}

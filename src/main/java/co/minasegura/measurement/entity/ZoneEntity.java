@@ -1,32 +1,36 @@
 package co.minasegura.measurement.entity;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 
+@DynamoDbBean
 public class ZoneEntity {
+    private String id;
+    private String type;
 
-    private String zoneID;
-    private String zoneType;
-
-    public ZoneEntity(String zoneID, String zoneType){
-        this.zoneID=zoneID;
-        this.zoneType=zoneType;
-    }
-    @DynamoDBAttribute(attributeName = "zoneID")
-
-    public String getZoneID() {
-        return zoneID;
+    public ZoneEntity() {
     }
 
-    public void setZoneID(String zoneID) {
-        this.zoneID = zoneID;
+    public ZoneEntity(String id, String type) {
+        this.id = id;
+        this.type = type;
     }
 
-    @DynamoDBAttribute(attributeName = "zoneType")
-    public String getZoneType() {
-        return zoneType;
+    @DynamoDbAttribute("id")
+    public String getId() {
+        return id;
     }
 
-    public void setZoneType(String zoneType) {
-        this.zoneType = zoneType;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @DynamoDbAttribute("type")
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

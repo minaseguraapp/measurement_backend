@@ -1,7 +1,7 @@
-package co.minasegura.measurement.service.impl.filtering;
+package co.minasegura.measurement.service.impl.filter;
 
 import co.minasegura.measurement.model.Measurement;
-import co.minasegura.measurement.service.filtering.FilterOperator;
+import co.minasegura.measurement.service.FilterOperator;
 import java.util.List;
 
 public class ZoneTypeFilterOperator implements FilterOperator {

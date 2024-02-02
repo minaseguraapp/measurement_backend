@@ -1,11 +1,11 @@
 package co.minasegura.measurement.util;
 
 import co.minasegura.measurement.dto.MeasurementFilter;
+import co.minasegura.measurement.model.Measurement;
 import co.minasegura.measurement.properties.MeasurementProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Validator;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
@@ -14,27 +14,25 @@ import org.springframework.stereotype.Service;
 public class EntrypointUtil {
 
     private final MeasurementProperties properties;
-    private final ObjectMapper mapper;
+    private final Validator validator;
 
-
-    public EntrypointUtil(MeasurementProperties properties, ObjectMapper mapper) {
+    public EntrypointUtil(MeasurementProperties properties, Validator validator) {
         this.properties = properties;
-        this.mapper = mapper;
+        this.validator= validator;
     }
 
     public EnumMap<MeasurementFilter, String> getMeasurementFilter(
         Map<String, String> queryParams) {
 
-        final Set<String> filterSet = Stream
-            .of(MeasurementFilter.values())
-            .map(MeasurementFilter::getFilter).collect(
-                Collectors.toSet());
+        final Map<String, MeasurementFilter> invertedFilterMap = Stream.of(
+                MeasurementFilter.values())
+            .collect(Collectors.toMap(MeasurementFilter::getFilter, filter -> filter));
+
         final EnumMap<MeasurementFilter, String> filters = new EnumMap<>(MeasurementFilter.class);
 
         queryParams.entrySet().stream()
-            .filter(entry -> filterSet.contains(entry.getKey()))
-            .forEach(
-                entry -> filters.put(MeasurementFilter.valueOf(entry.getKey()), entry.getValue()));
+            .filter(entry -> invertedFilterMap.containsKey(entry.getKey()))
+            .forEach(entry -> filters.put(invertedFilterMap.get(entry.getKey()), entry.getValue()));
 
         return filters;
     }
@@ -43,12 +41,8 @@ public class EntrypointUtil {
         return properties.getRequiredFilters().stream().allMatch(searchCriteria::containsKey);
     }
 
-    public String toJson(Object value) {
-        try {
-            return mapper.writeValueAsString(value);
-        } catch (Exception e) {
-            System.err.println("Error converting object to JSON: " + e.getMessage());
-            return null;
-        }
+    public boolean isMeasurementValid(Measurement measurement) {
+        return measurement != null && validator.validate(measurement).isEmpty();
     }
+
 }

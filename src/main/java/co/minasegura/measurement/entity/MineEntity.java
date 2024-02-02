@@ -1,15 +1,20 @@
 package co.minasegura.measurement.entity;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 
+@DynamoDbBean
 public class MineEntity {
     private String id;
 
-    public MineEntity(String id){
-        this.id=id;
+    public MineEntity() {
     }
 
-    @DynamoDBAttribute(attributeName = "id")
+    public MineEntity(String id) {
+        this.id = id;
+    }
+
+    @DynamoDbAttribute("id")
     public String getId() {
         return id;
     }

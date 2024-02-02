@@ -8,4 +8,6 @@ public interface IMeasurementRepository {
 
     List<MeasurementEntity> getMeasurementEntities(@Nonnull String mineId, @Nonnull String ZoneId,
         String measurementType);
+
+    boolean createMeasurement(MeasurementEntity measurement);
 }

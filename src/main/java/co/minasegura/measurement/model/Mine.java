@@ -1,3 +1,5 @@
 package co.minasegura.measurement.model;
 
-public record Mine(String id) {}
+import jakarta.validation.constraints.NotNull;
+
+public record Mine(@NotNull String id) {}

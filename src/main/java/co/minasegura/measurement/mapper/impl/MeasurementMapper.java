@@ -21,7 +21,7 @@ public class MeasurementMapper {
 
     public Measurement entityToModel(MeasurementEntity entity) {
         Mine mine = new Mine(entity.getMine().getId());
-        Zone zone = new Zone(entity.getZone().getZoneID(), entity.getZone().getZoneType(), mine);
+        Zone zone = new Zone(entity.getZone().getId(), entity.getZone().getType(), mine);
         MeasurementType measurementType = MeasurementType.valueOf(entity.getMeasurementType());
 
         return new Measurement(dbUtil.getTimestamp(entity.getMeasurementDateTimeType()), measurementType, zone, entity.getMeasurementInfo());
@@ -33,7 +33,7 @@ public class MeasurementMapper {
         ZoneEntity zoneEntity = new ZoneEntity(model.zone().id(), model.zone().type());
 
         return new MeasurementEntity(
-            dbUtil.buildPartitionKey(mineEntity.getId(), zoneEntity.getZoneID()),
+            dbUtil.buildPartitionKey(mineEntity.getId(), zoneEntity.getId()),
             dbUtil.buildSortKey(model.measurementType().name(), model.timestamp()),
             mineEntity,
             zoneEntity,
