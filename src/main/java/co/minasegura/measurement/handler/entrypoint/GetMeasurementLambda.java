@@ -44,7 +44,7 @@ public class GetMeasurementLambda implements LambdaFunction {
             apiGatewayProxyRequestEvent.getQueryStringParameters());
 
         if (!util.hasRequestMinimumCriteria(searchCriteria)) {
-            new APIGatewayProxyResponseEvent()
+            return new APIGatewayProxyResponseEvent()
                 .withStatusCode(HttpStatusCode.BAD_REQUEST);
         }
 
