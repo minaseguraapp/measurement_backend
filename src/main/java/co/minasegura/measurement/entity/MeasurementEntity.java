@@ -50,6 +50,7 @@ public class MeasurementEntity {
 
     @DynamoDbSortKey
     @DynamoDbAttribute("measurementTypeTimestamp")
+    @DynamoDbSecondarySortKey(indexNames = "MineTypeIndex")
     public String getMeasurementTypeTimestamp() {
         return measurementTypeTimestamp;
     }
@@ -87,7 +88,6 @@ public class MeasurementEntity {
     }
 
     @DynamoDbAttribute("measurementType")
-    @DynamoDbSecondarySortKey(indexNames = "MineTypeIndex")
     public String getMeasurementType() {
         return measurementType;
     }

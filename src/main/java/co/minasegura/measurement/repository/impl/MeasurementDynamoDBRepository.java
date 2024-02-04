@@ -69,20 +69,20 @@ public class MeasurementDynamoDBRepository implements IMeasurementRepository {
                 keyBuilder.sortValue(measurementType);
             }
 
-            final QueryConditional queryConditional = QueryConditional
-                .keyEqualTo(keyBuilder.build());
+            final QueryConditional queryConditional = measurementType != null ?
+                QueryConditional.sortBeginsWith(keyBuilder.build()) : QueryConditional
+                .keyEqualTo(keyBuilder.build()) ;
 
             final DynamoDbIndex<MeasurementEntity> mineTypeIndex = measurementTable.index(
                 "MineTypeIndex");
 
-            List<MeasurementEntity> results = new ArrayList<>();
+            final List<MeasurementEntity> results = new ArrayList<>();
 
             mineTypeIndex.query(r -> r.queryConditional(queryConditional)).stream()
                 .forEach(page -> results.addAll(page.items()));
 
             return results;
         }
-
     }
 
     @Override

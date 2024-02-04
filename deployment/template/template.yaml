@@ -99,8 +99,6 @@ Resources:
           AttributeType: S
         - AttributeName: mineId
           AttributeType: S
-        - AttributeName: measurementType
-          AttributeType: S
       KeySchema:
         - AttributeName: mineZoneId
           KeyType: HASH
@@ -110,9 +108,9 @@ Resources:
         - IndexName: MineTypeIndex
           KeySchema:
             - AttributeName: mineId
-              KeyType: HASH  # GSI Partition Key
-            - AttributeName: measurementType
-              KeyType: RANGE # GSI Sort Key
+              KeyType: HASH
+            - AttributeName: measurementTypeTimestamp
+              KeyType: RANGE
           Projection:
             ProjectionType: ALL
       BillingMode: PAY_PER_REQUEST
