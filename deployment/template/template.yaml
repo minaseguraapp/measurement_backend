@@ -44,7 +44,9 @@ Resources:
                   - dynamodb:PutItem
                   - dynamodb:UpdateItem
                   - dynamodb:DeleteItem
-                Resource: !GetAtt MeasurementTable.Arn
+                Resource:
+                  - !GetAtt MeasurementTable.Arn
+                  - !Sub "${MeasurementTable.Arn}/index/MineTypeIndex"
         - PolicyName: CloudWatchLogsAccess # Añade esta nueva política
           PolicyDocument:
             Version: '2012-10-17'
@@ -91,15 +93,28 @@ Resources:
     Properties:
       TableName: MeasurementTable
       AttributeDefinitions:
-        - AttributeName: MineZoneID
+        - AttributeName: mineZoneId
           AttributeType: S
-        - AttributeName: MeasurementDateTimeType
+        - AttributeName: measurementTypeTimestamp
+          AttributeType: S
+        - AttributeName: mineId
+          AttributeType: S
+        - AttributeName: measurementType
           AttributeType: S
       KeySchema:
-        - AttributeName: MineZoneID
-          KeyType: HASH  # Partition Key
-        - AttributeName: MeasurementDateTimeType
-          KeyType: RANGE  # Sort Key
+        - AttributeName: mineZoneId
+          KeyType: HASH
+        - AttributeName: measurementTypeTimestamp
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: MineTypeIndex
+          KeySchema:
+            - AttributeName: mineId
+              KeyType: HASH  # GSI Partition Key
+            - AttributeName: measurementType
+              KeyType: RANGE # GSI Sort Key
+          Projection:
+            ProjectionType: ALL
       BillingMode: PAY_PER_REQUEST
 
 Outputs:

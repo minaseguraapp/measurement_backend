@@ -6,10 +6,9 @@ import co.minasegura.measurement.entity.MeasurementEntity;
 import co.minasegura.measurement.mapper.impl.MeasurementMapper;
 import co.minasegura.measurement.model.Measurement;
 import co.minasegura.measurement.repository.IMeasurementRepository;
-import co.minasegura.measurement.service.IMeasurementService;
 import co.minasegura.measurement.service.IFilterCriteriaService;
+import co.minasegura.measurement.service.IMeasurementService;
 import co.minasegura.measurement.util.CommonsUtil;
-import co.minasegura.measurement.util.ServiceUtil;
 import jakarta.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.List;
@@ -24,17 +23,15 @@ class MeasurementService implements IMeasurementService {
 
     private final IMeasurementRepository repository;
     private final IFilterCriteriaService filterCriteriaService;
-    private final ServiceUtil serviceUtil;
     private final MeasurementMapper mapper;
     private final CommonsUtil commonsUtil;
 
     public MeasurementService(IMeasurementRepository repository,
-        IFilterCriteriaService filterCriteriaService, ServiceUtil serviceUtil,
+        IFilterCriteriaService filterCriteriaService,
         MeasurementMapper mapper,
         CommonsUtil commonsUtil) {
         this.repository = repository;
         this.filterCriteriaService = filterCriteriaService;
-        this.serviceUtil = serviceUtil;
         this.mapper = mapper;
         this.commonsUtil = commonsUtil;
     }
@@ -44,14 +41,10 @@ class MeasurementService implements IMeasurementService {
 
         LOGGER.info("Get Measurement Service Started with: [{}]", commonsUtil.toJson(criteria));
 
-        final String mineId = serviceUtil.extractFilterParam(criteria, MeasurementFilter.MINE,
-            true);
-        final String zoneId = serviceUtil.extractFilterParam(criteria, MeasurementFilter.ZONE_ID,
-            true);
-        final String measurementType = serviceUtil.extractFilterParam(criteria,
-            MeasurementFilter.MEASUREMENT_TYPE, false);
-
-        List<Measurement> measurements = findMeasurementInDatabase(mineId, zoneId, measurementType);
+        List<Measurement> measurements = findMeasurementInDatabase(
+            criteria.get(MeasurementFilter.MINE),
+            criteria.get(MeasurementFilter.ZONE_ID),
+            criteria.get(MeasurementFilter.MEASUREMENT_TYPE));
 
         measurements = filterCriteriaService.applyFiltering(measurements, criteria);
 
@@ -59,15 +52,17 @@ class MeasurementService implements IMeasurementService {
     }
 
     @Override
-    public boolean createMeasurement(Measurement measurementToRegister){
-        LOGGER.info("Get Measurement Service Started with: [{}]", commonsUtil.toJson(measurementToRegister));
+    public boolean createMeasurement(Measurement measurementToRegister) {
+        LOGGER.info("Get Measurement Service Started with: [{}]",
+            commonsUtil.toJson(measurementToRegister));
 
-        final MeasurementEntity entity= mapper.modelToEntity(measurementToRegister);
+        final MeasurementEntity entity = mapper.modelToEntity(measurementToRegister);
 
         return this.repository.createMeasurement(entity);
     }
 
-    private List<Measurement> findMeasurementInDatabase(@Nonnull String mineId, String zoneId, String measurementType) {
+    private List<Measurement> findMeasurementInDatabase(String mineId, String zoneId,
+        String measurementType) {
         return this.repository.getMeasurementEntities(mineId, zoneId, measurementType).stream()
             .map(mapper::entityToModel).toList();
     }

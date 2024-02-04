@@ -24,7 +24,7 @@ public class MeasurementMapper {
         Zone zone = new Zone(entity.getZone().getId(), entity.getZone().getType(), mine);
         MeasurementType measurementType = MeasurementType.valueOf(entity.getMeasurementType());
 
-        return new Measurement(dbUtil.getTimestamp(entity.getMeasurementDateTimeType()), measurementType, zone, entity.getMeasurementInfo());
+        return new Measurement(dbUtil.getTimestamp(entity.getMeasurementTypeTimestamp()), measurementType, zone, entity.getMeasurementInfo());
     }
 
     public MeasurementEntity modelToEntity(Measurement model) {
@@ -35,11 +35,14 @@ public class MeasurementMapper {
         return new MeasurementEntity(
             dbUtil.buildPartitionKey(mineEntity.getId(), zoneEntity.getId()),
             dbUtil.buildSortKey(model.measurementType().name(), model.timestamp()),
+            mineEntity.getId(),
+            zoneEntity.getId(),
+            model.timestamp(),
+            model.measurementType().name(),
             mineEntity,
             zoneEntity,
-            model.measurementInfo(),
-            model.measurementType().name(),
-            model.timestamp());
+            model.measurementInfo()
+            );
     }
 
 }
