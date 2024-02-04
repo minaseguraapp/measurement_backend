@@ -58,7 +58,7 @@ Resources:
                   - logs:PutLogEvents
                 Resource: arn:aws:logs:*:*:*
 
-  GetMeasurementFunction:
+  MeasurementFunction:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt LambdaExecutionRole.Arn
@@ -72,16 +72,7 @@ Resources:
             RestApiId: !Ref MeasurementApi
             Path: /measurement
             Method: get
-
-  PostMeasurementFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Role: !GetAtt LambdaExecutionRole.Arn
-      Environment:
-        Variables:
-          SPRING_CLOUD_FUNCTION_DEFINITION: MeasurementLambdaFunction
-      Events:
-        GetRequest:
+        PostRequest:
           Type: Api
           Properties:
             RestApiId: !Ref MeasurementApi
