@@ -24,14 +24,12 @@ public class MeasurementDynamoDBRepository implements IMeasurementRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(Logger.class);
 
     private final DynamoDBUtil dynamoUtil;
-    private final CommonsUtil commonsUtil;
     private final DynamoDbEnhancedClient enhancedClient;
 
 
-    public MeasurementDynamoDBRepository(DynamoDBUtil dynamoUtil, CommonsUtil commonsUtil,
+    public MeasurementDynamoDBRepository(DynamoDBUtil dynamoUtil,
         DynamoDbEnhancedClient enhancedClient) {
         this.dynamoUtil = dynamoUtil;
-        this.commonsUtil = commonsUtil;
         this.enhancedClient = enhancedClient;
     }
 
