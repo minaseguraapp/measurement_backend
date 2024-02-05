@@ -1,7 +1,7 @@
 package co.minasegura.measurement.handler.entrypoint;
 
 import co.minasegura.measurement.dto.GetMeasurementResponse;
-import co.minasegura.measurement.dto.MeasurementFilter;
+import co.minasegura.measurement.dto.MeasurementQueryFilter;
 import co.minasegura.measurement.handler.route.LambdaFunction;
 import co.minasegura.measurement.service.IMeasurementService;
 import co.minasegura.measurement.util.CommonsUtil;
@@ -40,7 +40,7 @@ public class GetMeasurementLambda implements LambdaFunction {
                 .withStatusCode(HttpStatusCode.BAD_REQUEST);
         }
 
-        EnumMap<MeasurementFilter, String> searchCriteria = util.getMeasurementFilter(
+        EnumMap<MeasurementQueryFilter, String> searchCriteria = util.getMeasurementFilter(
             apiGatewayProxyRequestEvent.getQueryStringParameters());
 
         if (!util.hasRequestMinimumCriteria(searchCriteria)) {

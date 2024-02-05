@@ -1,6 +1,6 @@
 package co.minasegura.measurement.dto;
 
-public enum MeasurementFilter {
+public enum MeasurementQueryFilter {
     MINE("mine"),
     ZONE_ID("zoneId"),
     ZONE_TYPE("zoneType"),
@@ -8,7 +8,7 @@ public enum MeasurementFilter {
 
     private final String filter;
 
-    MeasurementFilter(String filter){
+    MeasurementQueryFilter(String filter){
         this.filter= filter;
     }
 

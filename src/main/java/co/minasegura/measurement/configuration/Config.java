@@ -1,6 +1,6 @@
 package co.minasegura.measurement.configuration;
 
-import co.minasegura.measurement.dto.MeasurementFilter;
+import co.minasegura.measurement.dto.MeasurementQueryFilter;
 import co.minasegura.measurement.handler.entrypoint.GetMeasurementLambda;
 import co.minasegura.measurement.handler.entrypoint.PostMeasurementLambda;
 import co.minasegura.measurement.handler.route.LambdaFunction;
@@ -26,11 +26,11 @@ public class Config {
     }
 
     @Bean
-    public EnumMap<MeasurementFilter, FilterOperator> getFilterOperator() {
-        final var operators = new EnumMap<MeasurementFilter, FilterOperator>(
-            MeasurementFilter.class);
+    public EnumMap<MeasurementQueryFilter, FilterOperator> getFilterOperator() {
+        final var operators = new EnumMap<MeasurementQueryFilter, FilterOperator>(
+            MeasurementQueryFilter.class);
 
-        operators.put(MeasurementFilter.ZONE_TYPE, new ZoneTypeFilterOperator());
+        operators.put(MeasurementQueryFilter.ZONE_TYPE, new ZoneTypeFilterOperator());
         return operators;
     }
 

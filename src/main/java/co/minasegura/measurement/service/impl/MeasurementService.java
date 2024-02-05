@@ -1,7 +1,7 @@
 package co.minasegura.measurement.service.impl;
 
 import co.minasegura.measurement.dto.GetMeasurementResponse;
-import co.minasegura.measurement.dto.MeasurementFilter;
+import co.minasegura.measurement.dto.MeasurementQueryFilter;
 import co.minasegura.measurement.entity.MeasurementEntity;
 import co.minasegura.measurement.mapper.impl.MeasurementMapper;
 import co.minasegura.measurement.model.Measurement;
@@ -9,7 +9,6 @@ import co.minasegura.measurement.repository.IMeasurementRepository;
 import co.minasegura.measurement.service.IFilterCriteriaService;
 import co.minasegura.measurement.service.IMeasurementService;
 import co.minasegura.measurement.util.CommonsUtil;
-import jakarta.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.List;
 import org.slf4j.Logger;
@@ -37,14 +36,14 @@ class MeasurementService implements IMeasurementService {
     }
 
     @Override
-    public GetMeasurementResponse getMeasurements(EnumMap<MeasurementFilter, String> criteria) {
+    public GetMeasurementResponse getMeasurements(EnumMap<MeasurementQueryFilter, String> criteria) {
 
         LOGGER.info("Get Measurement Service Started with: [{}]", commonsUtil.toJson(criteria));
 
         List<Measurement> measurements = findMeasurementInDatabase(
-            criteria.get(MeasurementFilter.MINE),
-            criteria.get(MeasurementFilter.ZONE_ID),
-            criteria.get(MeasurementFilter.MEASUREMENT_TYPE));
+            criteria.get(MeasurementQueryFilter.MINE),
+            criteria.get(MeasurementQueryFilter.ZONE_ID),
+            criteria.get(MeasurementQueryFilter.MEASUREMENT_TYPE));
 
         measurements = filterCriteriaService.applyFiltering(measurements, criteria);
 

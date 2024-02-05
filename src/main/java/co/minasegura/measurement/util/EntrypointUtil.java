@@ -1,6 +1,6 @@
 package co.minasegura.measurement.util;
 
-import co.minasegura.measurement.dto.MeasurementFilter;
+import co.minasegura.measurement.dto.MeasurementQueryFilter;
 import co.minasegura.measurement.model.Measurement;
 import co.minasegura.measurement.properties.MeasurementProperties;
 import jakarta.validation.Validator;
@@ -21,14 +21,15 @@ public class EntrypointUtil {
         this.validator= validator;
     }
 
-    public EnumMap<MeasurementFilter, String> getMeasurementFilter(
+    public EnumMap<MeasurementQueryFilter, String> getMeasurementFilter(
         Map<String, String> queryParams) {
 
-        final Map<String, MeasurementFilter> invertedFilterMap = Stream.of(
-                MeasurementFilter.values())
-            .collect(Collectors.toMap(MeasurementFilter::getFilter, filter -> filter));
+        final Map<String, MeasurementQueryFilter> invertedFilterMap = Stream.of(
+                MeasurementQueryFilter.values())
+            .collect(Collectors.toMap(MeasurementQueryFilter::getFilter, filter -> filter));
 
-        final EnumMap<MeasurementFilter, String> filters = new EnumMap<>(MeasurementFilter.class);
+        final EnumMap<MeasurementQueryFilter, String> filters = new EnumMap<>(
+            MeasurementQueryFilter.class);
 
         queryParams.entrySet().stream()
             .filter(entry -> invertedFilterMap.containsKey(entry.getKey()))
@@ -37,7 +38,7 @@ public class EntrypointUtil {
         return filters;
     }
 
-    public boolean hasRequestMinimumCriteria(EnumMap<MeasurementFilter, String> searchCriteria) {
+    public boolean hasRequestMinimumCriteria(EnumMap<MeasurementQueryFilter, String> searchCriteria) {
         return properties.getRequiredFilters().stream().allMatch(searchCriteria::containsKey);
     }
 

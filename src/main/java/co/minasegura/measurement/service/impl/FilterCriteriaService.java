@@ -1,6 +1,6 @@
 package co.minasegura.measurement.service.impl;
 
-import co.minasegura.measurement.dto.MeasurementFilter;
+import co.minasegura.measurement.dto.MeasurementQueryFilter;
 import co.minasegura.measurement.model.Measurement;
 import co.minasegura.measurement.service.FilterOperator;
 import co.minasegura.measurement.service.IFilterCriteriaService;
@@ -11,15 +11,15 @@ import org.springframework.stereotype.Service;
 @Service
 class FilterCriteriaService implements IFilterCriteriaService {
 
-    private final EnumMap<MeasurementFilter, FilterOperator> filterOperator;
+    private final EnumMap<MeasurementQueryFilter, FilterOperator> filterOperator;
 
-    public FilterCriteriaService(EnumMap<MeasurementFilter, FilterOperator> filterOperator) {
+    public FilterCriteriaService(EnumMap<MeasurementQueryFilter, FilterOperator> filterOperator) {
         this.filterOperator = filterOperator;
     }
 
     @Override
     public List<Measurement> applyFiltering(List<Measurement> measurements,
-        EnumMap<MeasurementFilter, String> criteria) {
+        EnumMap<MeasurementQueryFilter, String> criteria) {
 
         List<Measurement> tempMeasurements = measurements;
 
