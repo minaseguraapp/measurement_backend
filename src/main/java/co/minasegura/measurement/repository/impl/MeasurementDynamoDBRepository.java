@@ -1,8 +1,12 @@
 package co.minasegura.measurement.repository.impl;
 
 import co.minasegura.measurement.entity.MeasurementEntity;
+import co.minasegura.measurement.events.MeasurementEvent;
 import co.minasegura.measurement.exception.NotValidParamException;
+import co.minasegura.measurement.model.Measurement;
+import co.minasegura.measurement.properties.MeasurementProperties;
 import co.minasegura.measurement.repository.IMeasurementRepository;
+import co.minasegura.measurement.util.CommonsUtil;
 import co.minasegura.measurement.util.DynamoDBUtil;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +20,9 @@ import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
+import software.amazon.awssdk.services.sqs.SqsClient;
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
+import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
 
 @Repository
 public class MeasurementDynamoDBRepository implements IMeasurementRepository {
@@ -24,12 +31,23 @@ public class MeasurementDynamoDBRepository implements IMeasurementRepository {
 
     private final DynamoDBUtil dynamoUtil;
     private final DynamoDbEnhancedClient enhancedClient;
+    private final SqsClient sqsClient;
+    private final CommonsUtil commonsUtil;
+    private final MeasurementProperties properties;
 
 
-    public MeasurementDynamoDBRepository(DynamoDBUtil dynamoUtil,
-        DynamoDbEnhancedClient enhancedClient) {
+    public MeasurementDynamoDBRepository(
+        DynamoDBUtil dynamoUtil,
+        DynamoDbEnhancedClient enhancedClient,
+        SqsClient sqsClient,
+        CommonsUtil commonsUtil,
+        MeasurementProperties properties
+    ) {
         this.dynamoUtil = dynamoUtil;
         this.enhancedClient = enhancedClient;
+        this.sqsClient = sqsClient;
+        this.commonsUtil = commonsUtil;
+        this.properties = properties;
     }
 
     public List<MeasurementEntity> getMeasurementEntities(String mineId, String zoneId,
@@ -100,11 +118,32 @@ public class MeasurementDynamoDBRepository implements IMeasurementRepository {
 
     @Override
     public boolean createMeasurement(MeasurementEntity measurement) {
-        LOGGER.info("POST Measurement Repository");
+        LOGGER.info("Creating New measurement Item");
         DynamoDbTable<MeasurementEntity> measurementTable = enhancedClient.table("MeasurementTable",
             TableSchema.fromBean(MeasurementEntity.class));
 
         measurementTable.putItem(measurement);
+        return true;
+    }
+
+    @Override
+    public boolean publishMeasurement(Measurement measurement) {
+        LOGGER.info("Publishing New measurement Item, to be published on [{}]", properties.getQueueName());
+
+        String queueUrl = sqsClient.getQueueUrl(
+            builder -> builder.queueName(properties.getQueueName())).queueUrl();
+        String messageBody = commonsUtil.toJson(
+            new MeasurementEvent(properties.getEventTypeName(), measurement));
+
+        SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
+            .queueUrl(queueUrl)
+            .messageBody(messageBody)
+            .build();
+
+        SendMessageResponse response = sqsClient.sendMessage(sendMsgRequest);
+
+        LOGGER.info("Event send to SQS queue [{}] [{}] with Response: [{}]", queueUrl, messageBody,
+            response.toString());
         return true;
     }
 }

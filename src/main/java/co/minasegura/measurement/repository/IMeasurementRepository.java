@@ -1,6 +1,7 @@
 package co.minasegura.measurement.repository;
 
 import co.minasegura.measurement.entity.MeasurementEntity;
+import co.minasegura.measurement.model.Measurement;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 
@@ -10,4 +11,6 @@ public interface IMeasurementRepository {
         String measurementType);
 
     boolean createMeasurement(MeasurementEntity measurement);
+
+    boolean publishMeasurement(Measurement measurement);
 }

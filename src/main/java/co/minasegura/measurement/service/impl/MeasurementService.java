@@ -36,7 +36,8 @@ class MeasurementService implements IMeasurementService {
     }
 
     @Override
-    public GetMeasurementResponse getMeasurements(EnumMap<MeasurementQueryFilter, String> criteria) {
+    public GetMeasurementResponse getMeasurements(
+        EnumMap<MeasurementQueryFilter, String> criteria) {
 
         LOGGER.info("Get Measurement Service Started with: [{}]", commonsUtil.toJson(criteria));
 
@@ -56,8 +57,9 @@ class MeasurementService implements IMeasurementService {
             commonsUtil.toJson(measurementToRegister));
 
         final MeasurementEntity entity = mapper.modelToEntity(measurementToRegister);
-
-        return this.repository.createMeasurement(entity);
+        this.repository.createMeasurement(entity);
+        this.repository.publishMeasurement(measurementToRegister);
+        return true;
     }
 
     private List<Measurement> findMeasurementInDatabase(String mineId, String zoneId,

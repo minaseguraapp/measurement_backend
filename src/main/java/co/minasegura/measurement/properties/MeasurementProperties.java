@@ -12,6 +12,8 @@ public class MeasurementProperties{
     private Set<MeasurementQueryFilter> requiredFilters;
     private String partitionKeyFormat;
     private String sortKeyFormat;
+    private String queueName;
+    private String eventTypeName;
 
     public Set<MeasurementQueryFilter> getRequiredFilters() {
         return requiredFilters;
@@ -36,5 +38,21 @@ public class MeasurementProperties{
 
     public void setSortKeyFormat(String sortKeyFormat) {
         this.sortKeyFormat = sortKeyFormat;
+    }
+
+    public String getQueueName() {
+        return queueName;
+    }
+
+    public void setQueueName(String queueName) {
+        this.queueName = queueName;
+    }
+
+    public String getEventTypeName() {
+        return eventTypeName;
+    }
+
+    public void setEventTypeName(String eventTypeName) {
+        this.eventTypeName = eventTypeName;
     }
 }

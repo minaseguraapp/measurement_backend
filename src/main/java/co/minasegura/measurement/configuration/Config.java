@@ -15,7 +15,9 @@ import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
+import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.sqs.SqsClient;
 
 @Configuration
 public class Config {
@@ -36,7 +38,8 @@ public class Config {
 
     @Bean
     public DynamoDbEnhancedClient dynamoDbEnhancedClient() {
-        DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
+        DynamoDbClient dynamoDbClient = DynamoDbClient.builder().httpClient(
+                UrlConnectionHttpClient.builder().build())
             .build();
 
         return DynamoDbEnhancedClient.builder()
@@ -45,8 +48,15 @@ public class Config {
     }
 
     @Bean
-    public Map<Route, LambdaFunction> getRouter(GetMeasurementLambda getMeasurementLambda, PostMeasurementLambda postMeasurementLambda){
-        Map<Route, LambdaFunction> routerConfig= new HashMap<>();
+    public SqsClient sqsClient() {
+        return SqsClient.builder().httpClient(UrlConnectionHttpClient.builder().build())
+            .build();
+    }
+
+    @Bean
+    public Map<Route, LambdaFunction> getRouter(GetMeasurementLambda getMeasurementLambda,
+        PostMeasurementLambda postMeasurementLambda) {
+        Map<Route, LambdaFunction> routerConfig = new HashMap<>();
 
         routerConfig.put(new Route(HttpMethod.GET, "/measurement"), getMeasurementLambda);
         routerConfig.put(new Route(HttpMethod.POST, "/measurement"), postMeasurementLambda);
