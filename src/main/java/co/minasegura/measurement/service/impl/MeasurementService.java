@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-class MeasurementService implements IMeasurementService {
+public class MeasurementService implements IMeasurementService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Logger.class);
 

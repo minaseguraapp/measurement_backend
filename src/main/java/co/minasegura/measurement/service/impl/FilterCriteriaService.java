@@ -9,7 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-class FilterCriteriaService implements IFilterCriteriaService {
+public class FilterCriteriaService implements IFilterCriteriaService {
 
     private final EnumMap<MeasurementQueryFilter, FilterOperator> filterOperator;
 
@@ -30,7 +30,7 @@ class FilterCriteriaService implements IFilterCriteriaService {
                     criteriaEntry.getValue());
             }
         }
-        return measurements;
+        return tempMeasurements;
     }
 
 }
